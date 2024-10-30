@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Shop</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/">TreeShop</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="/trees">Tree Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about">About Me</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mt-5">
+        <h1>Tree Shop</h1>
+        
+    
+        <form action="/add-tree" method="POST" class="mb-3">
+            <div class="form-group">
+                <label for="treename">Tree Name</label>
+                <input type="text" name="treename" class="form-control mb-2" placeholder="Tree Name" required>
+                
+                <label for="description">Description</label>
+                <input type="text" name="description" class="form-control mb-2" placeholder="Description" required>
+                
+                <label for="image">Image URL</label>
+                <div class="input-group mb-3">
+                    <input type="text" name="image" class="form-control" placeholder="Image URL">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-outline-secondary">Browse</button>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary mr-2">Add</button>
+                <form action="/reset" method="POST">
+                    <button type="submit" class="btn btn-danger">Reset</button>
+                </form>
+            </div>
+        </form>
+
+     
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Actions</th> <!-- Thêm cột cho hành động -->
+                </tr>
+            </thead>
+            <tbody>
+                <% trees.forEach((tree, index) => { %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <td><%= tree.treename %></td>
+                        <td>
+                            <% if (tree.image) { %>
+                                <img src="<%= tree.image %>" alt="<%= tree.treename %>" style="width: 50px;">
+                            <% } %>
+                        </td>
+                        <td><%= tree.description %></td>
+                        <td>
+                            <button class="btn btn-link text-success" onclick="editTree('<%= tree._id %>')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-link text-danger" onclick="deleteTree('<%= tree._id %>')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <footer class="text-center mt-5">
+        <p>&copy; 2023 Tree Shop. All rights reserved.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function editTree(id) {
+            // Logic to edit tree (e.g., redirect to edit page)
+            window.location.href = '/edit-tree/' + id; // Cập nhật URL phù hợp
+        }
+
+        function deleteTree(id) {
+            if (confirm("Are you sure you want to delete this tree?")) {
+                // Logic to delete tree (e.g., send a DELETE request)
+                $.ajax({
+                    url: '/delete-tree/' + id,
+                    type: 'DELETE',
+                    success: function(result) {
+                        // Reload the page or update the UI
+                        location.reload();
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
